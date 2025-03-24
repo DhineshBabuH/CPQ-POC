@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPQ Editor</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <div id="cpq-app">
+        <header id="top-navigation" class="top-nav">
+            <div class="left-section">
+                <div id="template-name-container" class="template-name">
+                    <input type="text" id="template-name" value="Untitled Template">
+                    <div class="template-actions">
+                        <button id="save-template" class="icon-button" title="Save Template">
+                            <span class="icon">💾</span>
+                        </button>
+                        <button id="delete-template" class="icon-button" title="Delete Template">
+                            <span class="icon">🗑️</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="middle-section">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="create">Create Template</button>
+                    <button class="nav-tab" data-tab="design">Design Templates</button>
+                    <button class="nav-tab" data-tab="signature">Add E-Signature</button>
+                </div>
+            </div>
+            <div class="right-section">
+                <button id="save-next-btn" class="action-button">Save as Next</button>
+                <button id="publish-btn" class="action-button primary">Publish</button>
+                <div id="auto-save-indicator" class="auto-save">
+                    <span class="icon">🔄</span>
+                    <span class="status">Auto-saved</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="editor-toolbar" class="editor-toolbar">
+            <div class="toolbar-group">
+                <button id="undo-btn" class="toolbar-button" title="Undo (Ctrl+Z)">
+                    <span class="icon">↩️</span>
+                </button>
+                <button id="redo-btn" class="toolbar-button" title="Redo (Ctrl+Y)">
+                    <span class="icon">↪️</span>
+                </button>
+            </div>
+            <div class="toolbar-group">
+                <div class="toolbar-dropdown">
+                    <button id="insert-field-btn" class="toolbar-button">
+                        Insert Field <span class="icon">▼</span>
+                    </button>
+                    <!-- Dropdown content will be added dynamically -->
+                </div>
+            </div>
+            <div id="format-toolbar" class="toolbar-group format-tools" style="display: none;">
+                <select id="font-family" class="toolbar-select">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                </select>
+                <select id="font-size" class="toolbar-select">
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                    <option value="24">24</option>
+                    <option value="36">36</option>
+                </select>
+                <button id="bold-btn" class="toolbar-button" title="Bold">
+                    <span class="icon">B</span>
+                </button>
+                <button id="italic-btn" class="toolbar-button" title="Italic">
+                    <span class="icon">I</span>
+                </button>
+                <button id="underline-btn" class="toolbar-button" title="Underline">
+                    <span class="icon">U</span>
+                </button>
+                <div class="toolbar-button-group">
+                    <button id="align-left-btn" class="toolbar-button" title="Align Left">
+                        <span class="icon">⟵</span>
+                    </button>
+                    <button id="align-center-btn" class="toolbar-button" title="Align Center">
+                        <span class="icon">↔</span>
+                    </button>
+                    <button id="align-right-btn" class="toolbar-button" title="Align Right">
+                        <span class="icon">⟶</span>
+                    </button>
+                </div>
+                <div class="toolbar-button-group">
+                    <button id="list-bullet-btn" class="toolbar-button" title="Bullet List">
+                        <span class="icon">•</span>
+                    </button>
+                    <button id="list-number-btn" class="toolbar-button" title="Numbered List">
+                        <span class="icon">1.</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="document-container" class="document-container">
+            <div id="page-container" class="page-container">
+                <!-- Pages will be added here dynamically -->
+                <div class="page" data-page-id="page-1">
+                    <div class="page-header" contenteditable="true" data-section="header"></div>
+                    <div class="page-body">
+                        <div class="editor-block" data-block-id="block-1">
+                            <div class="editor-content" contenteditable="true" data-editable="true"></div>
+                        </div>
+                    </div>
+                    <div class="page-footer" contenteditable="true" data-section="footer"></div>
+                    <div class="page-actions">
+                        <button class="page-action-btn" data-action="add-header" title="Add Header">H</button>
+                        <button class="page-action-btn" data-action="duplicate-page" title="Duplicate Page">+</button>
+                        <button class="page-action-btn" data-action="delete-page" title="Delete Page">🗑️</button>
+                        <button class="page-action-btn" data-action="page-settings" title="Page Settings">⚙️</button>
+                    </div>
+                </div>
+            </div>
+            <div id="add-page-button" class="add-page-button">
+                <button class="action-button">+ Add Page</button>
+            </div>
+        </div>
+
+        <!-- Mention/slash command panel -->
+        <div id="mention-panel" class="mention-panel" style="display: none;">
+            <div class="mention-search">
+                <input type="text" id="mention-search-input" placeholder="Search...">
+            </div>
+            <div class="mention-items">
+                <!-- Items will be added dynamically -->
+            </div>
+        </div>
+
+        <!-- Style panel -->
+        <div id="style-panel" class="side-panel" style="display: none;">
+            <div class="panel-header">
+                <h3>Text Styles</h3>
+                <button class="close-panel">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="style-section">
+                    <label>Text Color</label>
+                    <input type="color" id="text-color" value="#000000">
+                </div>
+                <div class="style-section">
+                    <label>Background Color</label>
+                    <input type="color" id="bg-color" value="#ffffff">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript modules -->
+    <script src="js/core/utils.js"></script>
+    <script src="js/core/events.js"></script>
+    <script src="js/core/state.js"></script>
+    <script src="js/editor/mention.js"></script>
+    <script src="js/editor/text-editor.js"></script>
+    <script src="js/editor/toolbar.js"></script>
+    <script src="js/layouts/navigation.js"></script>
+    <script src="js/layouts/page-manager.js"></script>
+    <script src="js/core/app.js"></script>
+</body>
+</html>
